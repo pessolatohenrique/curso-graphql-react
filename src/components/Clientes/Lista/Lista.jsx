@@ -1,28 +1,18 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import clientesApi from '../../../api/clientes'
+import React from "react";
+import { Link } from "react-router-dom";
+import clientesApi from "../../../api/clientes";
+import { Query } from "react-apollo";
+import { LISTA_CLIENTES } from "../../../graphql/clientes";
 
 class Clientes extends React.Component {
   constructor(props) {
-    super(props)
-
-    this.state = {
-      clientes: []
-    }
+    super(props);
   }
 
-  componentDidMount() {
-    this.carregarClientes()
-  }
-  
+  componentDidMount() {}
+
   deletarCliente(id) {
-    clientesApi.removerCliente(id)
-      .then(() => this.carregarClientes())
-  }
-  
-  carregarClientes() {
-    clientesApi.listarClientes()
-      .then(clientes => this.setState({clientes}))
+    clientesApi.removerCliente(id).then(() => this.carregarClientes());
   }
 
   render() {
@@ -42,26 +32,33 @@ class Clientes extends React.Component {
               <th>Ações</th>
             </tr>
           </thead>
-          
+
           <tbody>
-            {
-              this.state.clientes.map(cliente => (
-                <tr>
-                  <td>{cliente.nome}</td>
-                  <td>{cliente.cpf}</td>
-                  <td>
-                    <Link to={`clientes/${cliente.id}`}>visualizar</Link>
-                    <Link to={`clientes/alterar/${cliente.id}`}>alterar</Link>
-                    <button onClick={this.deletarCliente.bind(this, cliente.id)}>remover</button>
-                  </td>
-                </tr>
-              ))
-            }
+            <Query query={LISTA_CLIENTES}>
+              {({ data }) => {
+                if (!data) return null;
+                return data.clientes.map((cliente) => (
+                  <tr key={cliente.cpf}>
+                    <td>{cliente.nome}</td>
+                    <td>{cliente.cpf}</td>
+                    <td>
+                      <Link to={`clientes/${cliente.id}`}>visualizar</Link>
+                      <Link to={`clientes/alterar/${cliente.id}`}>alterar</Link>
+                      <button
+                        onClick={this.deletarCliente.bind(this, cliente.id)}
+                      >
+                        remover
+                      </button>
+                    </td>
+                  </tr>
+                ));
+              }}
+            </Query>
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }
 
-export default Clientes
+export default Clientes;
