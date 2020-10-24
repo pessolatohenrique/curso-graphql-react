@@ -13,19 +13,12 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import clientesApi from "../../../api/clientes";
-import { Query } from "react-apollo";
-import { LISTA_CLIENTES } from "../../../graphql/clientes";
+import { Query, Mutation } from "react-apollo";
+import { LISTA_CLIENTES, DELETA_CLIENTE } from "../../../graphql/clientes";
 
 class Clientes extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount() {}
-
-  deletarCliente(id) {
-    clientesApi.removerCliente(id).then(() => this.carregarClientes());
   }
 
   render() {
@@ -49,7 +42,7 @@ class Clientes extends React.Component {
                   </TableHead>
                   <TableBody>
                     <Query query={LISTA_CLIENTES} fetchPolicy="no-cache">
-                      {({ data }) => {
+                      {({ data, refetch }) => {
                         if (!data) return null;
                         return data.clientes.map((cliente) => (
                           <TableRow key={cliente.cpf}>
@@ -64,15 +57,24 @@ class Clientes extends React.Component {
                               >
                                 <Create />
                               </Button>
-                              <Button
-                                color="secondary"
-                                onClick={this.deletarCliente.bind(
-                                  this,
-                                  cliente.id
-                                )}
-                              >
-                                <Delete />
-                              </Button>
+                              <Mutation mutation={DELETA_CLIENTE}>
+                                {(deletaCliente, response) => {
+                                  return (
+                                    <Button
+                                      color="secondary"
+                                      onClick={() => {
+                                        deletaCliente({
+                                          variables: { id: cliente.id },
+                                        });
+
+                                        refetch();
+                                      }}
+                                    >
+                                      <Delete />
+                                    </Button>
+                                  );
+                                }}
+                              </Mutation>
                             </TableCell>
                           </TableRow>
                         ));

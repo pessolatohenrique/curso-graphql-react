@@ -19,3 +19,9 @@ export const ADICIONA_CLIENTE = gql`
     }
   }
 `;
+
+export const DELETA_CLIENTE = gql`
+  mutation deletaCliente($id: ID!) {
+    deletaCliente(id: $id)
+  }
+`;
