@@ -15,6 +15,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
+import { CpfMaskCustom } from "../../../helpers/MaskInput";
 
 const ValidationSchema = Yup.object().shape({
   nome: Yup.string()
@@ -63,6 +64,9 @@ const FormComponent = (props) => {
               fullWidth
               InputLabelProps={{
                 shrink: true,
+              }}
+              InputProps={{
+                inputComponent: CpfMaskCustom,
               }}
               error={errors.cpf && touched.cpf}
               helperText={
