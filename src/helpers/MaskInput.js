@@ -30,3 +30,7 @@ export const CpfMaskCustom = (props) => {
     />
   );
 };
+
+export const unmask = (value) => {
+  return value.replace(/\D+/g, "");
+};

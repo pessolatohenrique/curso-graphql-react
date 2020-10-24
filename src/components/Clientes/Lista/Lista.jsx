@@ -48,7 +48,7 @@ class Clientes extends React.Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <Query query={LISTA_CLIENTES}>
+                    <Query query={LISTA_CLIENTES} fetchPolicy="no-cache">
                       {({ data }) => {
                         if (!data) return null;
                         return data.clientes.map((cliente) => (

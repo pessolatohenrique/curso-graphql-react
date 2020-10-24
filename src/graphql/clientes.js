@@ -9,3 +9,13 @@ export const LISTA_CLIENTES = gql`
     }
   }
 `;
+
+export const ADICIONA_CLIENTE = gql`
+  mutation adicionaCliente($nome: String!, $cpf: String!) {
+    adicionaCliente(nome: $nome, cpf: $cpf) {
+      id
+      nome
+      cpf
+    }
+  }
+`;
