@@ -41,7 +41,7 @@ class Pets extends React.Component {
                       <TableCell>Tipo</TableCell>
                       <TableCell>Dono</TableCell>
                       <TableCell>Observações</TableCell>
-                      <TableCell>Ações</TableCell>>
+                      <TableCell>Ações</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

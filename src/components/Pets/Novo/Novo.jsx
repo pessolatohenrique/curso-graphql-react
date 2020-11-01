@@ -1,108 +1,184 @@
 import React from "react";
-import petsApi from "../../../api/pets";
-import { Mutation } from "react-apollo";
+import {
+  REQUIRED_MESSAGE,
+  TOO_SHORT_MESSAGE,
+  TOO_LONG_MESSAGE,
+} from "../../../constants";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import {
+  Typography,
+  Container,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormHelperText,
+} from "@material-ui/core";
+import { Query, Mutation } from "react-apollo";
 import { ADICIONA_PET } from "../../../graphql/pets";
+import { LISTA_CLIENTES } from "../../../graphql/clientes";
 
-class Novo extends React.Component {
-  constructor(props) {
-    super(props);
+const ValidationSchema = Yup.object().shape({
+  nome: Yup.string()
+    .min(2, TOO_SHORT_MESSAGE)
+    .max(50, TOO_LONG_MESSAGE)
+    .required(REQUIRED_MESSAGE),
+  donoId: Yup.string().required(REQUIRED_MESSAGE),
+  tipo: Yup.string().required(REQUIRED_MESSAGE),
+  observacoes: Yup.string(),
+});
 
-    this.state = {
-      nome: "",
-      donoId: "",
-      tipo: "",
-      observacoes: "",
-    };
+const INITIAL_VALUES = { nome: "", donoId: "", tipo: "", observacoes: "" };
 
-    this.gerenciarMudancas = this.gerenciarMudancas.bind(this);
-    this.gerenciarEnvio = this.gerenciarEnvio.bind(this);
-  }
+const FormComponent = (props) => {
+  return (
+    <Container>
+      <Card>
+        <CardContent>
+          <Typography variant="h5" component="h2" color="primary">
+            Novo Pet
+          </Typography>
+          <br />
+          <Mutation mutation={ADICIONA_PET}>
+            {(adicionaPet, response) => (
+              <Formik
+                initialValues={INITIAL_VALUES}
+                validationSchema={ValidationSchema}
+                onSubmit={(values, actions) => {
+                  values.donoId = parseInt(values.donoId);
+                  adicionaPet({ variables: values });
+                  props.history.push("/pets");
+                }}
+                render={({
+                  errors,
+                  touched,
+                  values,
+                  isSubmitting,
+                  handleChange,
+                }) => {
+                  return (
+                    <Form>
+                      <TextField
+                        name="nome"
+                        id="nome"
+                        placeholder="Preencha aqui"
+                        label="Nome"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        error={errors.nome && touched.nome}
+                        helperText={
+                          errors.nome && touched.nome ? (
+                            <div>{errors.nome}</div>
+                          ) : null
+                        }
+                        onChange={handleChange}
+                        value={values.nome}
+                      />
+                      <br />
+                      <br />
 
-  gerenciarMudancas(evento) {
-    const chave = evento.target.name;
-    const valor = evento.target.value;
-    this.setState({ [chave]: valor });
-  }
+                      <Query query={LISTA_CLIENTES}>
+                        {({ data, response }) => {
+                          if (!data) return null;
 
-  async gerenciarEnvio(evento, adicionaPet) {
-    evento.preventDefault();
+                          return (
+                            <FormControl
+                              fullWidth
+                              error={errors.donoId && touched.donoId}
+                            >
+                              <InputLabel id="donoId">Dono</InputLabel>
+                              <Select
+                                labelId="donoId"
+                                id="donoId"
+                                name="donoId"
+                                label="Dono"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                onChange={handleChange}
+                                value={values.donoId}
+                              >
+                                {data.clientes.map((cliente) => (
+                                  <MenuItem value={cliente.id} key={cliente.id}>
+                                    {cliente.nome}
+                                  </MenuItem>
+                                ))}
+                                ;
+                              </Select>
+                              {errors.donoId && touched.donoId && (
+                                <FormHelperText>{errors.donoId}</FormHelperText>
+                              )}
+                            </FormControl>
+                          );
+                        }}
+                      </Query>
+                      <br />
+                      <br />
+                      <TextField
+                        name="tipo"
+                        id="tipo"
+                        placeholder="Preencha aqui"
+                        label="Tipo"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        error={errors.tipo && touched.tipo}
+                        helperText={
+                          errors.tipo && touched.tipo ? (
+                            <div>{errors.tipo}</div>
+                          ) : null
+                        }
+                        onChange={handleChange}
+                        value={values.tipo}
+                      />
+                      <br />
+                      <br />
+                      <TextField
+                        name="observacoes"
+                        id="observacoes"
+                        placeholder="Preencha aqui"
+                        label="Observações"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        error={errors.observacoes && touched.observacoes}
+                        helperText={
+                          errors.observacoes && touched.observacoes ? (
+                            <div>{errors.observacoes}</div>
+                          ) : null
+                        }
+                        onChange={handleChange}
+                        value={values.observacoes}
+                      />
+                      <br />
+                      <br />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        Adicionar
+                      </Button>
+                    </Form>
+                  );
+                }}
+              ></Formik>
+            )}
+          </Mutation>
+        </CardContent>
+      </Card>
+    </Container>
+  );
+};
 
-    const variables = {
-      ...this.state,
-      donoId: parseInt(this.state.donoId),
-    };
-
-    await adicionaPet({
-      variables,
-    });
-
-    this.props.history.push("/pets");
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>Novo Pet</h1>
-
-        <Mutation mutation={ADICIONA_PET}>
-          {(adicionaPet, response) => {
-            if (response.error) {
-              return <span>{response.error.message}</span>;
-            }
-
-            return (
-              <form
-                onSubmit={(event) => this.gerenciarEnvio(event, adicionaPet)}
-              >
-                <div>
-                  <label htmlFor="nome">Nome</label>
-                  <input
-                    type="text"
-                    name="nome"
-                    id="nome"
-                    value={this.state.nome}
-                    onChange={this.gerenciarMudancas}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="donoId">dono</label>
-                  <input
-                    type="text"
-                    name="donoId"
-                    id="donoId"
-                    value={this.state.donoId}
-                    onChange={this.gerenciarMudancas}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="tipo">tipo</label>
-                  <input
-                    type="text"
-                    name="tipo"
-                    id="tipo"
-                    value={this.state.tipo}
-                    onChange={this.gerenciarMudancas}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="observacoes">observacoes</label>
-                  <input
-                    type="text"
-                    name="observacoes"
-                    id="observacoes"
-                    value={this.state.observacoes}
-                    onChange={this.gerenciarMudancas}
-                  />
-                </div>
-
-                <button type="submit">Enviar</button>
-              </form>
-            );
-          }}
-        </Mutation>
-      </div>
-    );
-  }
-}
-
-export default Novo;
+export default FormComponent;

@@ -15,6 +15,20 @@ export const LISTA_PETS = gql`
   }
 `;
 
+export const CONSULTA_PET = gql`
+  query Pet($id: ID!) {
+    pet(id: $id) {
+      id
+      nome
+      dono {
+        id
+      }
+      tipo
+      observacoes
+    }
+  }
+`;
+
 export const ADICIONA_PET = gql`
   mutation adicionaPet(
     $nome: String!
@@ -23,6 +37,28 @@ export const ADICIONA_PET = gql`
     $observacoes: String
   ) {
     adicionaPet(
+      nome: $nome
+      donoId: $donoId
+      tipo: $tipo
+      observacoes: $observacoes
+    ) {
+      nome
+      tipo
+      observacoes
+    }
+  }
+`;
+
+export const ATUALIZA_PET = gql`
+  mutation atualizaPet(
+    $id: ID!
+    $nome: String!
+    $donoId: Int!
+    $tipo: String
+    $observacoes: String
+  ) {
+    atualizaPet(
+      id: $id
       nome: $nome
       donoId: $donoId
       tipo: $tipo
