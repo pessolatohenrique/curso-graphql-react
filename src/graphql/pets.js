@@ -34,3 +34,9 @@ export const ADICIONA_PET = gql`
     }
   }
 `;
+
+export const DELETA_PET = gql`
+  mutation deletaPet($id: ID!) {
+    deletaPet(id: $id)
+  }
+`;
