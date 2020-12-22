@@ -1,5 +1,13 @@
 import React from "react";
 import MaskedInput from "react-text-mask";
+import createNumberMask from "text-mask-addons/dist/createNumberMask";
+
+const defaultMaskOptions = {
+  prefix: "R$",
+  suffix: "",
+  includeThousandsSeparator: true,
+  thousandsSeparatorSymbol: ".",
+};
 
 export const CpfMaskCustom = (props) => {
   const { inputRef, ...other } = props;
@@ -31,6 +39,15 @@ export const CpfMaskCustom = (props) => {
   );
 };
 
+export const CurrencyMaskCustom = ({ maskOptions, ...inputProps }) => {
+  const currencyMask = createNumberMask({
+    ...defaultMaskOptions,
+    ...maskOptions,
+  });
+
+  return <MaskedInput mask={currencyMask} {...inputProps} />;
+};
+
 export const unmask = (value) => {
-  return value.replace(/\D+/g, "");
+  return value.toString().replace(/\D+/g, "");
 };
