@@ -20,22 +20,27 @@ import "./styles.scss";
 const items = [
   {
     table: "Dashboard",
+    link: "",
     icon: <DashboardIcon />,
   },
   {
     table: "atendimentos",
+    link: "atendimentos",
     icon: <ScheduleIcon />,
   },
   {
     table: "clientes",
+    link: "clientes",
     icon: <PeopleIcon />,
   },
   {
     table: "pets",
+    link: "pets",
     icon: <PetsIcon />,
   },
   {
     table: "servicos",
+    link: "servicos",
     icon: <RoomServiceIcon />,
   },
 ];
@@ -83,7 +88,7 @@ class Menu extends React.Component {
               {items.map((item, key) => (
                 <ListItem button key={key}>
                   <ListItemIcon>{item.icon}</ListItemIcon>
-                  <Button size="small" color="primary" href={`/${item.table}`}>
+                  <Button size="small" color="primary" href={`/${item.link}`}>
                     {item.table}
                   </Button>
                 </ListItem>

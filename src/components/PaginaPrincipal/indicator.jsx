@@ -8,8 +8,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
-import atendimentoImg from "../../assets/images/atendimentos.jpg";
-
 const useStyles = makeStyles({});
 
 const Indicador = (props) => {
@@ -17,7 +15,7 @@ const Indicador = (props) => {
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea href={`/${props.url}`}>
         <CardMedia
           component="img"
           alt={props.label}
