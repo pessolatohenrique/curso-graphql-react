@@ -14,6 +14,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
+import CustomBreadcrumb from "../../Utilitarios/CustomBreadcrumb";
 import { CurrencyMaskCustom, unmask } from "../../../helpers/MaskInput";
 import { Mutation } from "react-apollo";
 import { ADICIONA_SERVICO } from "../../../graphql/servicos";
@@ -33,6 +34,11 @@ const FormComponent = (props) => {
     <Container>
       <Card>
         <CardContent>
+          <CustomBreadcrumb
+            parentLink="/servicos"
+            parentLabel="Serviços"
+            childrenLabel="Novo"
+          />
           <Typography variant="h5" component="h2" color="primary">
             Novo Serviço
           </Typography>

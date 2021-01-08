@@ -13,6 +13,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import CustomBreadcrumb from "../../Utilitarios/CustomBreadcrumb";
 import { Query, Mutation } from "react-apollo";
 import { LISTA_PETS, DELETA_PET } from "../../../graphql/pets";
 
@@ -29,6 +30,7 @@ class Pets extends React.Component {
         <Container>
           <Card>
             <CardContent>
+              <CustomBreadcrumb childrenLabel="Listar" />
               <Typography variant="h5" component="h2" color="primary">
                 Pets
               </Typography>

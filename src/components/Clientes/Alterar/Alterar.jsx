@@ -15,6 +15,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
+import CustomBreadcrumb from "../../Utilitarios/CustomBreadcrumb";
 import { CpfMaskCustom, unmask } from "../../../helpers/MaskInput";
 import { Query, Mutation } from "react-apollo";
 import { CONSULTA_CLIENTE, ATUALIZA_CLIENTE } from "../../../graphql/clientes";
@@ -32,6 +33,11 @@ const FormComponent = (props) => {
     <Container>
       <Card>
         <CardContent>
+          <CustomBreadcrumb
+            parentLink="/clientes"
+            parentLabel="Clientes"
+            childrenLabel="Atualizar"
+          />
           <Typography variant="h5" component="h2" color="primary">
             Atualizar Cliente
           </Typography>
