@@ -21,10 +21,6 @@ import {
 } from "../../../graphql/atendimentos";
 
 class Atendimentos extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {}
 
   render() {

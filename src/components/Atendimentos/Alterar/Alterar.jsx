@@ -62,7 +62,6 @@ const FormComponent = (props) => {
               if (loading) return null;
               const { atendimento } = data;
               const {
-                id,
                 status,
                 observacoes,
                 cliente,
